@@ -2,12 +2,23 @@
 
 set -e -o pipefail
 
-mix_file_url="$1/mix.exs"
-
-if [ -f $mix_file_url ];
-then
+ok() {
   echo "Elixir"
   exit 0
-else
-  exit 1
+}
+
+dot_buildpacks="$1/.buildpacks"
+
+if [[ -f $dot_buildpacks ]]; then
+  if grep gigalixir-buildpack-release "$dot_buildpacks" >/dev/null 2>&1; then
+    ok
+  fi
 fi
+
+mix_file_url="$1/mix.exs"
+
+if [[ -f $mix_file_url ]]; then
+  ok
+fi
+
+exit 1
